@@ -11,15 +11,14 @@
 
           <ul class="error-messages">
             <template v-for="(messages, field) in errors">
-              <li v-for="(message, index) in messages" :key="index">
-                {{ field }} {{ message }}
-              </li>
+              <li v-for="(message, index) in messages" :key="index">{{ field }} {{ message }}</li>
             </template>
           </ul>
 
           <form @submit.prevent="onSubmit">
             <fieldset class="form-group" v-if="!isLogin">
               <input
+                v-model="username"
                 class="form-control form-control-lg"
                 type="text"
                 placeholder="Your Name"
@@ -41,6 +40,7 @@
                 class="form-control form-control-lg"
                 type="password"
                 placeholder="Password"
+                minlength="8"
                 required
               />
             </fieldset>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-import { login } from '@/api/user'
+import { login, register } from '@/api/user'
 
 export default {
   name: 'LoginIndex',
@@ -70,6 +70,7 @@ export default {
         email: '',
         password: ''
       },
+      username: '',
       errors: {} // 错误信息
     }
   },
@@ -77,9 +78,16 @@ export default {
     async onSubmit () {
       try {
         // 提交表单请求登录
-        const { data } = await login({
-          user: this.user
-        })
+        const { data } = this.isLogin
+          ? await login({
+            user: this.user
+          })
+          : await register({
+            user: {
+              ...this.user,
+              username: this.username
+            }
+          })
         console.log(data)
         // TODO: 保存用户的登录状态
 
