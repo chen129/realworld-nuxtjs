@@ -88,7 +88,8 @@ export default {
               username: this.username
             }
           })
-        console.log(data)
+        this.$store.commit('setUser', data.user)
+        console.log(this.$store.state.user)
         // TODO: 保存用户的登录状态
 
         // 跳转到首页
