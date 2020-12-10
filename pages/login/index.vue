@@ -15,14 +15,20 @@
 
           <form @submit.prevent="onSubmit">
             <fieldset class="form-group" v-if="!isLogin">
-              <input class="form-control form-control-lg" type="text" placeholder="Your Name" />
+              <input
+                class="form-control form-control-lg"
+                type="text"
+                placeholder="Your Name"
+                required
+              />
             </fieldset>
             <fieldset class="form-group">
               <input
                 v-model="user.email"
                 class="form-control form-control-lg"
-                type="text"
+                type="email"
                 placeholder="Email"
+                required
               />
             </fieldset>
             <fieldset class="form-group">
@@ -31,6 +37,7 @@
                 class="form-control form-control-lg"
                 type="password"
                 placeholder="Password"
+                required
               />
             </fieldset>
             <button
