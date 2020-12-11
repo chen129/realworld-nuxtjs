@@ -12,11 +12,26 @@
         <div class="col-md-9">
           <div class="feed-toggle">
             <ul class="nav nav-pills outline-active">
-              <li class="nav-item">
-                <a class="nav-link disabled" href>Your Feed</a>
+              <li class="nav-item" v-if="user">
+                <nuxt-link
+                  :class="['nav-link', { active: tab === 'your_feed' }]"
+                  :to="{ name: 'home', query: { tab: 'your_feed' } }"
+                  exact
+                >Your Feed</nuxt-link>
               </li>
               <li class="nav-item">
-                <a class="nav-link active" href>Global Feed</a>
+                <nuxt-link
+                  :class="['nav-link', { active: tab === 'global_feed' }]"
+                  :to="{ name: 'home', query: { tab: 'global_feed' } }"
+                  exact
+                >Global Feed</nuxt-link>
+              </li>
+              <li class="nav-item" v-if="tag">
+                <nuxt-link
+                  :class="['nav-link', { active: tab === 'tag' }]"
+                  :to="{ name: 'home', query: { tab: 'tag', tag } }"
+                  exact
+                >#{{ tag }}</nuxt-link>
               </li>
             </ul>
           </div>
@@ -82,7 +97,8 @@
                   name: 'home',
                   query: {
                     page: item,
-                    tag: $route.query.tag
+                    tag: $route.query.tag,
+                    tab
                   }
                 }"
                 >{{ item }}</nuxt-link>
@@ -99,7 +115,7 @@
               <nuxt-link
                 :to="{
                   name: 'home',
-                  query: { tag: tag }
+                  query: { tag: tag, tab: 'tag' }
                 }"
                 class="tag-pill tag-default"
                 v-for="tag in tags"
@@ -116,10 +132,11 @@
 <script>
 import { getArticles } from '@/api/article'
 import { getTags } from '@/api/tag'
+import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
-  watchQuery: ['page', 'tag'],
+  watchQuery: ['page', 'tag', 'tab'],
   async asyncData ({ query }) {
     const page = Number.parseInt(query.page) || 1
     const tag = query.tag
@@ -139,13 +156,15 @@ export default {
       limit,
       page,
       tags,
-      tag
+      tag,
+      tab: query.tab || 'global_feed'
     }
   },
   computed: {
     totalPage () {
       return Math.ceil(this.articlesCount / this.limit)
-    }
+    },
+    ...mapState(['user'])
   }
 }
 </script>
