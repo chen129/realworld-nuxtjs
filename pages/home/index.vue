@@ -114,11 +114,13 @@ export default {
   async asyncData ({ query }) {
     const page = Number.parseInt(query.page) || 1
     const limit = 20
-    const { data: { articles, articlesCount } } = await getArticles({
-      limit,
-      offset: (page - 1) * limit
-    })
-    const { data: { tags } } = await getTags()
+    const [{ data: { articles, articlesCount } }, { data: { tags } }] = await Promise.all([
+      getArticles({
+        limit,
+        offset: (page - 1) * limit
+      }),
+      await getTags()
+    ])
 
     return {
       articles,
