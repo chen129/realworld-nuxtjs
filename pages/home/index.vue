@@ -81,7 +81,8 @@
                   :to="{
                   name: 'home',
                   query: {
-                    page: item
+                    page: item,
+                    tag: $route.query.tag
                   }
                 }"
                 >{{ item }}</nuxt-link>
@@ -95,7 +96,15 @@
             <p>Popular Tags</p>
 
             <div class="tag-list">
-              <a href class="tag-pill tag-default" v-for="tag in tags" :key="tag">{{ tag }}</a>
+              <nuxt-link
+                :to="{
+                  name: 'home',
+                  query: { tag: tag }
+                }"
+                class="tag-pill tag-default"
+                v-for="tag in tags"
+                :key="tag"
+              >{{ tag }}</nuxt-link>
             </div>
           </div>
         </div>
@@ -110,14 +119,16 @@ import { getTags } from '@/api/tag'
 
 export default {
   name: 'Home',
-  watchQuery: ['page'],
+  watchQuery: ['page', 'tag'],
   async asyncData ({ query }) {
     const page = Number.parseInt(query.page) || 1
+    const tag = query.tag
     const limit = 20
     const [{ data: { articles, articlesCount } }, { data: { tags } }] = await Promise.all([
       getArticles({
         limit,
-        offset: (page - 1) * limit
+        offset: (page - 1) * limit,
+        tag
       }),
       await getTags()
     ])
@@ -127,7 +138,8 @@ export default {
       articlesCount,
       limit,
       page,
-      tags
+      tags,
+      tag
     }
   },
   computed: {
