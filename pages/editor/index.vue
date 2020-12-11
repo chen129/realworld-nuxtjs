@@ -33,7 +33,8 @@
 
 <script>
 export default {
-  name: 'Editor'
+  name: 'Editor',
+  middleware: 'authenticated'
 }
 </script>
 

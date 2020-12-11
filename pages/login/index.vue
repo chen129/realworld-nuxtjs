@@ -62,6 +62,7 @@ const Cookie = process.client ? require('js-cookie') : undefined
 
 export default {
   name: 'LoginIndex',
+  middleware: 'notAuthenticated',
   computed: {
     isLogin () {
       return this.$route.name === 'login'
