@@ -67,6 +67,27 @@
               <span>Read more...</span>
             </nuxt-link>
           </div>
+
+          <nav>
+            <ul class="pagination">
+              <li
+                class="page-item ng-scope"
+                :class="{ active: page === item }"
+                v-for="item in totalPage"
+                :key="item"
+              >
+                <nuxt-link
+                  class="page-link"
+                  :to="{
+                  name: 'home',
+                  query: {
+                    page: item
+                  }
+                }"
+                >{{ item }}</nuxt-link>
+              </li>
+            </ul>
+          </nav>
         </div>
 
         <div class="col-md-3">
@@ -95,12 +116,25 @@ import { getArticles } from '@/api/article'
 
 export default {
   name: 'Home',
-  async asyncData () {
-    const { data: { articles, articlesCount } } = await getArticles()
+  watchQuery: ['page'],
+  async asyncData ({ query }) {
+    const page = Number.parseInt(query.page) || 1
+    const limit = 20
+    const { data: { articles, articlesCount } } = await getArticles({
+      limit,
+      offset: (page - 1) * limit
+    })
 
     return {
       articles,
-      articlesCount
+      articlesCount,
+      limit,
+      page
+    }
+  },
+  computed: {
+    totalPage () {
+      return Math.ceil(this.articlesCount / this.limit)
     }
   }
 }
