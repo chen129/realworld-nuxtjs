@@ -82,6 +82,10 @@
               <span>Read more...</span>
             </nuxt-link>
           </div>
+          
+          <div class="article-preview" v-if="!articles.length">
+            No articles are here... yet.
+          </div>
 
           <nav>
             <ul class="pagination">
@@ -130,19 +134,23 @@
 </template>
 
 <script>
-import { getArticles } from '@/api/article'
+import { getArticles, getArticlesFeed } from '@/api/article'
 import { getTags } from '@/api/tag'
 import { mapState } from 'vuex'
 
 export default {
   name: 'Home',
   watchQuery: ['page', 'tag', 'tab'],
-  async asyncData ({ query }) {
+  async asyncData ({ query, store }) {
     const page = Number.parseInt(query.page) || 1
     const tag = query.tag
+    const tab = query.tab
     const limit = 20
+    const getArticlesList = store.state.user && tab === 'your_feed'
+      ? getArticlesFeed
+      : getArticles
     const [{ data: { articles, articlesCount } }, { data: { tags } }] = await Promise.all([
-      getArticles({
+      getArticlesList({
         limit,
         offset: (page - 1) * limit,
         tag
@@ -157,7 +165,7 @@ export default {
       page,
       tags,
       tag,
-      tab: query.tab || 'global_feed'
+      tab: tab || 'global_feed'
     }
   },
   computed: {
