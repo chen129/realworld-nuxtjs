@@ -33,7 +33,7 @@
       <i class="ion-heart"></i>
       &nbsp;
       Favorite Post
-      <span class="counter">(29)</span>
+      <span class="counter">({{ article.favoritesCount }})</span>
     </button>
   </div>
 </template>
