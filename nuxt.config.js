@@ -48,5 +48,8 @@ module.exports = {
       ])
     },
     linkActiveClass: 'active'
-  }
+  },
+  plugins: [
+    '~/plugins/request.js'
+  ]
 }
