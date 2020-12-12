@@ -12,3 +12,9 @@ export const getArticlesFeed = params => request.get('/api/articles/feed', {
   },
   params
 })
+
+// 添加点赞
+export const addFavorite = slug => request.post(`/api/articles/${slug}/favorite`)
+
+// 取消点赞
+export const deleteFavorite = slug => request.delete(`/api/articles/${slug}/favorite`)
