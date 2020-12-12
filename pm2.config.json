@@ -1,0 +1,9 @@
+{
+  "apps": [
+    {
+      "name": "reqlworld",
+      "script": "npm",
+      "args": "start"
+    }
+  ]
+}
