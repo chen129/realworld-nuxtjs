@@ -18,3 +18,6 @@ export const addFavorite = slug => request.post(`/api/articles/${slug}/favorite`
 
 // 取消点赞
 export const deleteFavorite = slug => request.delete(`/api/articles/${slug}/favorite`)
+
+// 获取文章详情
+export const getArticle = slug => request.get(`/api/articles/${slug}`)
